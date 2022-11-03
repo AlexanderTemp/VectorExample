@@ -29,6 +29,10 @@ const getId = () => `dndnode_${id++}`;
 
 function App() {
   const [modalVector, setModalVector] = useState(false)
+  const [dataVector, setDataVector] = useState({
+    nombre: "",
+    longitud: 1
+  })
   const [themeSettings, setThemeSettings] = useState("light")
   const [fontSettings, setFontSettings] = useState("14px")
 
@@ -92,7 +96,8 @@ function App() {
           height: "fit-content",
           padding: "0",
           background: "none",
-          borderStyle: "none"
+          borderStyle: "none",
+          borderWidth: 0
         },
       };
       let newNodeData = {}
@@ -133,7 +138,7 @@ function App() {
   return (
     <>
       {modalVector &&
-        <div className="fixed z-40 w-[550px] h-[500px] left-[calc(50vw-275px)] top-[calc(50vh-250px)] flex flex-col">
+        <div className="fixed shadow-lg rounded-md shadow-indigo-800 z-40 w-[550px] h-[250px] left-[calc(50vw-275px)] top-[calc(50vh-124px)] flex flex-col">
           <div className="bg-[#1E2227] text-slate-100 flex justify-between rounded-tl-md rounded-tr-md py-2 px-3">
             <div>
               <h2 className="text-xl">Configuración gráfica del Vector</h2>
@@ -149,25 +154,65 @@ function App() {
                 <p className="font-semibold text-lg">Nombre del Vector</p>
               </div>
               <div className="basis-2/3 flex items-center">
-                <input className="px-1 w-full mx-3 py-1 border-[1px] border-slate-800" type="text" />
+                <input name="nominput" id="nominput" className="px-1 w-full mx-3 py-1 rounded-md border-[2px] border-slate-800" type="text" onChange={(e) => {
+                  setDataVector({
+                    ...dataVector,
+                    nombre: e.target.value
+                  })
+                }} />
               </div>
             </div>
-            <div className=" w-full flex items-center">
+            <div className=" w-full flex items-start">
               <div className="basis-1/3">
                 <p className="font-semibold text-lg">Longitud del Vector</p>
               </div>
-              <div className="basis-2/3 flex items-center">
-                <input className="px-1 w-full mx-3 py-1 border-[1px] border-slate-800" type="text" />
+              <div className="basis-2/3 flex items-center flex-col">
+                <input name="longinput" id="longinput" className="px-1 w-[90%] mx-3 py-1 rounded-md border-[2px] border-slate-800" type="text" onChange={(e) => {
+                  setDataVector({
+                    ...dataVector,
+                    longitud: e.target.value
+                  })
+                }} />
+                <p className="text-indigo-600 font-semibold text-sm">Introduce una longitud entre 1 a 20</p>
               </div>
             </div>
           </div>
 
           <div className="bg-[#23272E] flex w-full justify-end gap-2 px-4 text-slate-100 py-2 rounded-br-md rounded-bl-md">
             <div>
-              <button className="py-1 px-2 hover:bg-[#7998d5] transform transition-all duration-200 border-2 border-slate-100 rounded-md">Cerrar</button>
+              <button className="py-1 px-2 hover:bg-[#7998d5] transform transition-all duration-200 border-2 border-slate-100 rounded-md" onClick={() => setModalVector(false)}>Cerrar</button>
             </div>
             <div>
-              <button className="py-1 px-2 bg-[#4D78CC] transform transition-all duration-200 hover:bg-[#2554b1]  border-2  rounded-md">Guardar</button>
+              <button className="py-1 px-2 bg-[#4D78CC] transform transition-all duration-200 hover:bg-[#2554b1]  border-2  rounded-md" onClick={() => {
+                if (dataVector.nombre.length > 0 && /^\d+$/.test(dataVector.longitud) && Number(dataVector.longitud) > 0 && Number(dataVector.longitud) < 21) {
+                  let idNodeData = getId()
+                  const newNode = {
+                    id: idNodeData,
+                    type: "input",
+                    position: { x: 200, y: 5 },
+                    data: { label: <NodeVector id={idNodeData} length={Number(dataVector.longitud)} nombre={dataVector.nombre} handleClickNode={handleClickNode} /> },
+                    style: {
+                      width: "fit-content",
+                      height: "fit-content",
+                      padding: "0",
+                      background: "none",
+                      borderStyle: "none"
+                    },
+                  };
+                  const newNodeData = {
+                    idForNode: idNodeData,
+                    length: dataVector.longitud,
+                    nombre: dataVector.nombre,
+                    type: "vector"
+                  }
+                  graphNode.push(newNodeData)
+                  setNodes(nds => nds.concat(newNode))
+                  setModalVector(false)
+                } else {
+                  document.getElementById("nominput").classList.add("border-red-500")
+                  document.getElementById("longinput").classList.add("border-red-500")
+                }
+              }}>Guardar</button>
             </div>
           </div>
         </div>

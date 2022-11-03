@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/VectorExample/static/css/main.a7230736.css",
+    "main.js": "/VectorExample/static/js/main.fcdaba7d.js",
+    "index.html": "/VectorExample/index.html",
+    "main.a7230736.css.map": "/VectorExample/static/css/main.a7230736.css.map",
+    "main.fcdaba7d.js.map": "/VectorExample/static/js/main.fcdaba7d.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.a7230736.css",
+    "static/js/main.fcdaba7d.js"
+  ]
+}
